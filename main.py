@@ -1,18 +1,37 @@
 import os
 import sys
-
-# Import modules from GhostX
 from ai.assistant import Assistant
 from hacking_tools.ip_scanner import IPScanner
 from game_modding.roblox_modder import RobloxModder
 from ui.main_ui import MainUI
+from ui.boot_sequence import BootSequence
+
+
+def handle_command(user_input, ghostx):
+    """
+    Handle user commands and execute corresponding actions.
+    """
+    if user_input == "help":
+        print("Available commands: help, scan, mod, exit")
+    elif user_input == "scan":
+        print("Launching IP Scanner...")
+        ghostx["ip_scanner"].start_scan()
+    elif user_input == "mod":
+        print("Launching Roblox Modding Tool...")
+        ghostx["roblox_modder"].mod_game()
+    elif user_input == "exit":
+        print("Exiting GhostX... Goodbye!")
+        sys.exit(0)
+    else:
+        print(f"Unknown command: {user_input}. Type 'help' for a list of commands.")
+
 
 def initialize_ghostx():
     """
     Initialize the GhostX system and its components.
     """
     print("Initializing GhostX...")
-    
+
     # Initialize modules
     assistant = Assistant()
     ip_scanner = IPScanner()
@@ -25,45 +44,31 @@ def initialize_ghostx():
         "assistant": assistant,
         "ip_scanner": ip_scanner,
         "roblox_modder": roblox_modder,
-        "ui": ui
+        "ui": ui,
     }
+
 
 def main():
     """
     Main entry point for GhostX.
     """
-    print("Welcome to GhostX")
-    print("Type 'help' for a list of commands.")
+    # Display the boot-up sequence
+    boot = BootSequence()
+    boot.display_boot_sequence()
 
-    # Initialize the system
+    # Initialize GhostX system
     ghostx = initialize_ghostx()
+
+    print("Type 'help' for a list of commands.")
 
     while True:
         try:
             user_input = input("GhostX> ").strip().lower()
-
-            if user_input == "exit":
-                print("Shutting down GhostX. Goodbye!")
-                break
-            elif user_input == "help":
-                print("Available commands:")
-                print("- scan_ip: Scan an IP address")
-                print("- roblox_mod: Launch Roblox modder")
-                print("- ui: Launch GhostX UI")
-                print("- exit: Exit GhostX")
-            elif user_input == "scan_ip":
-                ghostx["ip_scanner"].scan()
-            elif user_input == "roblox_mod":
-                ghostx["roblox_modder"].start_modding()
-            elif user_input == "ui":
-                ghostx["ui"].launch()
-            else:
-                print("Invalid command. Type 'help' for a list of commands.")
+            handle_command(user_input, ghostx)
         except KeyboardInterrupt:
-            print("\nShutting down GhostX. Goodbye!")
+            print("\nExiting GhostX. Goodbye!")
             break
-        except Exception as e:
-            print(f"An error occurred: {e}")
+
 
 if __name__ == "__main__":
     main()
