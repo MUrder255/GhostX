@@ -1,0 +1,10 @@
+# AI-related libraries
+openai
+transformers
+
+# Hacking tools
+scapy
+nmap
+
+# UI libraries
+electron
